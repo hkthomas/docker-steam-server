@@ -13,5 +13,5 @@ apt-get install --yes --install-recommends \
   winehq-stable \
   winbind \
   supervisor \
-  xvfb && \
+  xvfb || (apt-get --fix-broken install --yes && apt-get install --yes --install-recommends winehq-stable) && \
 apt-get --quiet --yes upgrade && \

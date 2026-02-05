@@ -9,8 +9,8 @@ on:
   workflow_dispatch:
     
 jobs:
-  # Deploy a new image to DockerHub
-  build-and-publish-dockerhub:
+  # Deploy a new image to our registries
+  build-and-publish:
     name: Build & Publish
     runs-on: ubuntu-latest
     permissions:
