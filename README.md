@@ -339,16 +339,37 @@ su - steam -c "winetricks vcrun2013"
 
 ## Building
 Both debian-slim and ubuntu images build within about 2-3MB of each other, so
-only the ubuntu base is used. build using included makefile:
+only the ubuntu base is used.
 
-Main steam image with ubuntu wine repository:
+### Using Docker Compose (recommended)
+Build all variants:
 ```bash
-sudo make steam
+docker compose build
 ```
 
-Steam image using winehq repository:
+Build a specific variant:
 ```bash
-sudo make latest
+docker compose build stable
+docker compose build latest
+docker compose build experimental
+```
+
+Push to registry:
+```bash
+docker compose push
+```
+
+### Using Docker directly
+Build with the `WINE_VARIANT` build argument:
+```bash
+# Stable - Ubuntu wine packages (most stable)
+docker build -t thetestgame/steam:stable --build-arg WINE_VARIANT=stable .
+
+# Latest - WineHQ stable packages (newer features)
+docker build -t thetestgame/steam:latest --build-arg WINE_VARIANT=latest .
+
+# Experimental - WineHQ staging packages (bleeding edge)
+docker build -t thetestgame/steam:experimental --build-arg WINE_VARIANT=experimental .
 ```
 
 ## Troubleshooting

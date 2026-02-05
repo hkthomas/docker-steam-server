@@ -1,3 +1,0 @@
-# Setup supervisord process control system.
-cp /docker/supervisord.conf /etc/supervisor/supervisord.conf && \
-mkdir -p /data/supervisord && \

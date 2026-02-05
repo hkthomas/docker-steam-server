@@ -1,0 +1,37 @@
+# Docker Compose for building steam server images
+#
+# Build all variants:
+#   docker compose build
+#
+# Build specific variant:
+#   docker compose build stable
+#   docker compose build latest
+#   docker compose build experimental
+#
+# Push to registry:
+#   docker compose push
+
+services:
+  stable:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        WINE_VARIANT: stable
+    image: thetestgame/steam:stable
+
+  latest:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        WINE_VARIANT: latest
+    image: thetestgame/steam:latest
+
+  experimental:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        WINE_VARIANT: experimental
+    image: thetestgame/steam:experimental
