@@ -23,23 +23,42 @@ if [ ${UPDATE_OS} -eq 1 ]; then
   apt-get --quiet update && apt-get --quiet --yes upgrade
 fi
 
+# Determine login credentials (use account if provided, otherwise anonymous)
+if [ -n "${STEAM_USERNAME:-}" ] && [ -n "${STEAM_PASSWORD:-}" ]; then
+  STEAM_LOGIN="${STEAM_USERNAME} ${STEAM_PASSWORD}"
+  echo 'Using Steam account authentication ...'
+else
+  STEAM_LOGIN="anonymous"
+  echo 'Using anonymous Steam authentication ...'
+fi
+
 if [ ${UPDATE_STEAM} -eq 1 ]; then
   echo '--------------------------------------'
   echo "Updating steamcmd for ${PLATFORM} ..."
   su steam -c "steamcmd \
     +@sSteamCmdForcePlatformType ${PLATFORM} \
-    +login anonymous \
+    +login ${STEAM_LOGIN} \
     +quit"
 fi
 
 if [ ${UPDATE_SERVER} -eq 1 ]; then
   echo '--------------------------------------'
   echo "Updating app ${STEAM_APP_ID} ..."
+
+  # Build beta arguments if specified
+  BETA_ARGS=""
+  if [ -n "${STEAM_BETA:-}" ]; then
+    BETA_ARGS="-beta ${STEAM_BETA}"
+    if [ -n "${STEAM_BETA_PASSWORD:-}" ]; then
+      BETA_ARGS="${BETA_ARGS} -betapassword ${STEAM_BETA_PASSWORD}"
+    fi
+  fi
+
   su steam -c "steamcmd \
     +@sSteamCmdForcePlatformType ${PLATFORM} \
     +force_install_dir ${SERVER_DIR} \
-    +login anonymous \
-    +app_update ${STEAM_APP_ID} \
+    +login ${STEAM_LOGIN} \
+    +app_update ${STEAM_APP_ID} ${BETA_ARGS} \
     ${STEAM_APP_EXTRAS} \
     +quit"
 fi

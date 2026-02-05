@@ -1,7 +1,6 @@
 # Add wine
 dpkg --add-architecture i386 && \
 apt-get --quiet update && \
-apt-get --quiet --yes upgrade && \
 apt-get install --yes --install-recommends \
   lib32gcc-s1 \
   wine-stable \
@@ -9,3 +8,4 @@ apt-get install --yes --install-recommends \
   wine64 \
   winbind \
   xvfb && \
+apt-get --quiet --yes upgrade && \
