@@ -55,21 +55,25 @@ These versioned tags allow you to pin to a specific build date for reproducibili
 
 ## Parameters
 
-| Parameter        | Function                                                                                 | Default        |
-|------------------|------------------------------------------------------------------------------------------|----------------|
-| SERVER_DIR       | Location for server files.                                                               | `/data/server` |
-| STEAM            | Location of steamcmd client.                                                             | `/steam`       |
-| PLATFORM         | Platform to force specify when auto updating. `linux` or `windows`.                      | `windows`      |
-| STEAM_APP_ID     | Steam application ID for auto updating.                                                  | `0`            |
-| STEAM_APP_EXTRAS | Optional. Additional options and values for steam app update, e.g setting BETA versions. | ``             |
-| UPDATE_OS        | Update core OS on startup. `1` enable, `0` disable.                                      | `1`            |
-| UPDATE_STEAM     | Update steamcmd on startup. `1` enable, `0` disable.                                     | `1`            |
-| UPDATE_SERVER    | Update dedicated server specified by `STEAM_APP_ID` on startup. `1` enable, `0` disable. | `1`            |
-| PUID             | User ID to run steamcmd under as well as mount permissions.                              | `1000`         |
-| PGID             | Group ID to run steamcmd under as well as mount permissions.                             | `1000`         |
-| LANG             | Language environment to use in containers.                                               | `en_US.UTF-8`  |
-| LANGUAGE         | Language environment to use in containers.                                               | `en_US:UTF-8`  |
-| LC_ALL           | Language environment to use in containers.                                               | `en_US.UTF-8`  |
+| Parameter           | Function                                                                                 | Default        |
+|---------------------|------------------------------------------------------------------------------------------|----------------|
+| SERVER_DIR          | Location for server files.                                                               | `/data/server` |
+| STEAM               | Location of steamcmd client.                                                             | `/steam`       |
+| PLATFORM            | Platform to force specify when auto updating. `linux` or `windows`.                      | `windows`      |
+| STEAM_APP_ID        | Steam application ID for auto updating.                                                  | `0`            |
+| STEAM_USERNAME      | Optional. Steam account username for authenticated downloads. If empty, uses anonymous.  | ``             |
+| STEAM_PASSWORD      | Optional. Steam account password for authenticated downloads.                            | ``             |
+| STEAM_BETA          | Optional. Steam beta branch name to install (e.g., `experimental`, `prerelease`).        | ``             |
+| STEAM_BETA_PASSWORD | Optional. Password for private beta branches (if required).                              | ``             |
+| STEAM_APP_EXTRAS    | Optional. Additional options and values for steam app update.                            | ``             |
+| UPDATE_OS           | Update core OS on startup. `1` enable, `0` disable.                                      | `1`            |
+| UPDATE_STEAM        | Update steamcmd on startup. `1` enable, `0` disable.                                     | `1`            |
+| UPDATE_SERVER       | Update dedicated server specified by `STEAM_APP_ID` on startup. `1` enable, `0` disable. | `1`            |
+| PUID                | User ID to run steamcmd under as well as mount permissions.                              | `1000`         |
+| PGID                | Group ID to run steamcmd under as well as mount permissions.                             | `1000`         |
+| LANG                | Language environment to use in containers.                                               | `en_US.UTF-8`  |
+| LANGUAGE            | Language environment to use in containers.                                               | `en_US:UTF-8`  |
+| LC_ALL              | Language environment to use in containers.                                               | `en_US.UTF-8`  |
 
 ## Ports
 Default ports exposed by the container. Additional ports for servers can be
@@ -138,6 +142,8 @@ services:
       - UPDATE_SERVER=1
       - PLATFORM=windows
       - STEAM_APP_ID=443030
+      #- STEAM_BETA=experimental
+      #- STEAM_BETA_PASSWORD=
       - TZ=America/Los_Angeles
     volumes:
       - /my/docker/server/data:/data
