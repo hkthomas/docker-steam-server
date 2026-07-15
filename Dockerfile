@@ -1,23 +1,14 @@
 # steam dedicated server for docker.
 # https://developer.valvesoftware.com/wiki/SteamCMD#Linux.2FOS_X
-#
-# Build variants:
-#   stable       - Ubuntu wine packages (most stable)
-#   latest       - WineHQ stable packages (newer features)
-#   experimental - WineHQ staging packages (bleeding edge)
-#
-# Usage:
-#   docker build -t steam:stable --build-arg WINE_VARIANT=stable .
-#   docker build -t steam:latest --build-arg WINE_VARIANT=latest .
-#   docker build -t steam:experimental --build-arg WINE_VARIANT=experimental .
+# Linux only - Wine support removed
 
 FROM ubuntu:24.04
 
-ARG WINE_VARIANT=stable
+# ARG WINE_VARIANT=stable
 
 ENV SERVER_DIR=/data/server \
     STEAM=/steam \
-    PLATFORM=windows \
+    PLATFORM=linux \
     STEAM_APP_ID=0 \
     STEAM_APP_EXTRAS='' \
     STEAM_USERNAME='' \
@@ -39,6 +30,7 @@ RUN export LANG=en_US.UTF-8 && \
     export LC_ALL=en_US.UTF-8 && \
     export DEBIAN_FRONTEND=noninteractive && \
     export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=true && \
+    sed -i -e 's@archive.ubuntu.com@mirrors.ustc.edu.cn@g' -e 's@security.ubuntu.com@mirrors.ustc.edu.cn@g' /etc/apt/sources.list.d/ubuntu.sources && \
     apt-get --quiet update && \
     apt-get install --yes --install-recommends 2> /dev/null \
       locales \
@@ -51,63 +43,63 @@ RUN export LANG=en_US.UTF-8 && \
     /usr/sbin/locale-gen 2> /dev/null && \
     dpkg-reconfigure --frontend=noninteractive locales
 
-# Install Wine based on variant
-RUN export DEBIAN_FRONTEND=noninteractive && \
-    dpkg --add-architecture i386 && \
-    if [ "$WINE_VARIANT" = "stable" ]; then \
-      echo "Installing Ubuntu wine packages..." && \
-      apt-get --quiet update && \
-      apt-get install --yes --install-recommends \
-        lib32gcc-s1 \
-        wine-stable \
-        wine32 \
-        wine64 \
-        winbind \
-        xvfb; \
-    elif [ "$WINE_VARIANT" = "latest" ]; then \
-      echo "Installing WineHQ stable packages..." && \
-      mkdir -pm755 /etc/apt/keyrings && \
-      wget -O - https://dl.winehq.org/wine-builds/winehq.key | gpg --dearmor -o /etc/apt/keyrings/winehq-archive.key - && \
-      wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/noble/winehq-noble.sources && \
-      apt-get --quiet update && \
-      apt-get install --yes --install-recommends \
-        libsdl2-2.0-0 \
-        libsdl2-2.0-0:i386 \
-        libc6 \
-        libc6:i386 \
-        lib32gcc-s1 \
-        winehq-stable \
-        winbind \
-        supervisor \
-        xvfb || (apt-get --fix-broken install --yes && apt-get install --yes --install-recommends winehq-stable); \
-    elif [ "$WINE_VARIANT" = "experimental" ]; then \
-      echo "Installing WineHQ staging packages..." && \
-      mkdir -pm755 /etc/apt/keyrings && \
-      wget -O - https://dl.winehq.org/wine-builds/winehq.key | gpg --dearmor -o /etc/apt/keyrings/winehq-archive.key - && \
-      wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/noble/winehq-noble.sources && \
-      apt-get --quiet update && \
-      apt-get install --yes --install-recommends \
-        libsdl2-2.0-0 \
-        libsdl2-2.0-0:i386 \
-        libc6 \
-        libc6:i386 \
-        lib32gcc-s1 \
-        winehq-staging \
-        winbind \
-        supervisor \
-        xvfb; \
-    else \
-      echo "Unknown WINE_VARIANT: $WINE_VARIANT" && exit 1; \
-    fi && \
-    apt-get --quiet --yes upgrade
+# Install Wine based on variant - REMOVED (Linux only)
+# RUN export DEBIAN_FRONTEND=noninteractive && \
+#     dpkg --add-architecture i386 && \
+#     if [ "$WINE_VARIANT" = "stable" ]; then \
+#       echo "Installing Ubuntu wine packages..." && \
+#       apt-get --quiet update && \
+#       apt-get install --yes --install-recommends \
+#         lib32gcc-s1 \
+#         wine-stable \
+#         wine32 \
+#         wine64 \
+#         winbind \
+#         xvfb; \
+#     elif [ "$WINE_VARIANT" = "latest" ]; then \
+#       echo "Installing WineHQ stable packages..." && \
+#       mkdir -pm755 /etc/apt/keyrings && \
+#       wget -O - https://dl.winehq.org/wine-builds/winehq.key | gpg --dearmor -o /etc/apt/keyrings/winehq-archive.key - && \
+#       wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/noble/winehq-noble.sources && \
+#       apt-get --quiet update && \
+#       apt-get install --yes --install-recommends \
+#         libsdl2-2.0-0 \
+#         libsdl2-2.0-0:i386 \
+#         libc6 \
+#         libc6:i386 \
+#         lib32gcc-s1 \
+#         winehq-stable \
+#         winbind \
+#         supervisor \
+#         xvfb || (apt-get --fix-broken install --yes && apt-get install --yes --install-recommends winehq-stable); \
+#     elif [ "$WINE_VARIANT" = "experimental" ]; then \
+#       echo "Installing WineHQ staging packages..." && \
+#       mkdir -pm755 /etc/apt/keyrings && \
+#       wget -O - https://dl.winehq.org/wine-builds/winehq.key | gpg --dearmor -o /etc/apt/keyrings/winehq-archive.key - && \
+#       wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/noble/winehq-noble.sources && \
+#       apt-get --quiet update && \
+#       apt-get install --yes --install-recommends \
+#         libsdl2-2.0-0 \
+#         libsdl2-2.0-0:i386 \
+#         libc6 \
+#         libc6:i386 \
+#         lib32gcc-s1 \
+#         winehq-staging \
+#         winbind \
+#         supervisor \
+#         xvfb; \
+#     else \
+#       echo "Unknown WINE_VARIANT: $WINE_VARIANT" && exit 1; \
+#     fi && \
+#     apt-get --quiet --yes upgrade
 
-# Install winetricks
-RUN apt-get install --yes --install-recommends \
-      cabextract \
-      unzip \
-      p7zip && \
-    wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks -O /usr/bin/winetricks && \
-    chmod a+x /usr/bin/winetricks
+# Install winetricks - REMOVED (Wine tool)
+# RUN apt-get install --yes --install-recommends \
+#       cabextract \
+#       unzip \
+#       p7zip && \
+#     wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks -O /usr/bin/winetricks && \
+#     chmod a+x /usr/bin/winetricks
 
 # Auto-accept license and install steamcmd
 RUN export DEBIAN_FRONTEND=noninteractive && \
@@ -130,9 +122,6 @@ RUN useradd --create --home ${STEAM} steam && \
       steamcmd +quit" && \
     mkdir -p /steam/.steam/{sdk32,sdk64} && \
     echo "\nexport PATH=\$PATH:/steam/.steam/steamcmd/linux32:/steam/.steam/steamcmd/linux64" | tee -a /steam/.profile && \
-    echo 'Updating wine, ignore any errors ...' && \
-    su - steam -c 'wineboot --update' /dev/null 2>&1 && \
-    echo 'Wine update completed.' && \
     mkdir -p /data && \
     chown -R steam:steam ${STEAM} /data /docker && \
     chmod 0755 /docker/*
