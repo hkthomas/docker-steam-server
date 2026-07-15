@@ -1,13 +1,15 @@
 # 去除了wine，可以下载windows端，但无法运行。
-#镜像：hkthomas/steam:linux-only
-# 目前steamcmd下载linux端会失败，报错 ERROR! Failed to install app '*' (Invalid platform)
+# 镜像：hkthomas/steam:linux-only
+# 目前steamcmd下载linux端均失败，报错 ERROR! Failed to install app '*' (Invalid platform)
 解决方案如下：
-
+方法1:
 UPDATE_STEAM设置0
 
 添加变量STEAM_USERNAME: STEAM用户名
 STEAM_PASSWORD: STEAM密码。
 登陆批准后即可正常下载
+
+方法2:
 
 # [![steam][f8]®](https://developer.valvesoftware.com/wiki/SteamCMD) Steam (SteamCMD)
 
