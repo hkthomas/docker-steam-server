@@ -1,3 +1,6 @@
+# 去除了wine，可以下载windows端，但无法运行。
+# 镜像：hkthomas/steam:linux-only
+
 # [![steam][f8]®](https://developer.valvesoftware.com/wiki/SteamCMD) Steam (SteamCMD)
 
 > This is **NOT** an official Valve steam docker container.
